@@ -13,4 +13,3 @@ Kuvia voi kommentoida. Käyttäjä on joko ylläpitäjä tai tavallinen käyttä
 * Käyttäjä voi etsiä kuvia niiden kuvauksessa annetuilla hakusanoilla. 
 * Ylläpitäjä voi poistaa kaikkien käyttäjien kuvia ja kommentteja. 
 * Ylläpitäjä voi poistaa käyttäjätilin (tai antaa varoituksen?). 
-
