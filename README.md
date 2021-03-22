@@ -1,4 +1,4 @@
-# tsoha-kuvajako
+# tsoha-kuvaruutu
 
 Sovelluksessa on "seinä", jolla näkyy käyttäjien lataamia kuvia. 
 Kuvia voi kommentoida. Käyttäjä on joko ylläpitäjä tai tavallinen käyttäjä.
