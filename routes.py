@@ -5,13 +5,16 @@ import messages, users
 
 @app.route("/")
 def index():
+    print('1')
     list = messages.get_list() 
+    print('2')
     comment_count = []
     # Haetaan jokaisen viestin vastausten määrä
     for msg in list:
         print('viesti:', msg)
         # print('nyt haetaan viestin id', msg[3], 'vastausten maaraa')
         comment_count.append(len(messages.get_comments(msg[3])))
+    print('3')
     return render_template('index.html', count=len(list), messages=enumerate(list), comment_count=comment_count)
 
 @app.route('/show/<int:id>')
