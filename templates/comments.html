@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% block title %}Etusivu{% endblock %}
+{% block content %}
+<img src='data:;base64, {{ image }}'/>
+
+<h3>{{ og_message[0][0] }}</h3>
+<h5>From: {{og_message[0][1] }}, at: {{og_message[0][2].strftime("%d.%m.%Y %H:%M:%S") }}</h5>
+
+<p>Tänne lähetettiin tiedot viestistä {{ id }}</p>
+<hr>
+Kommentteja {{ count }} <br>
+{% for comment in comments %}
+{{comment[1]  }} sanoo {{comment[0] }}
+<br>
+{% endfor %}
+<br>
+<form action='/comment' method='POST', onsubmit="return check(this)">
+<textarea name='content' rows='3' cols='40'></textarea>
+<br>
+<input type='submit' value='Send'>
+<input type='hidden' name='id' value='{{ id }}'>
+</form>
+
+<script>
+    function check(form) {
+        if (form.content.value.length > 30) {
+            alert('Viesti on liian pitkä');
+            return false;
+        }
+    }
+</script>
+{% endblock %}

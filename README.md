@@ -11,5 +11,11 @@ Kuvia voi kommentoida. Käyttäjä on joko ylläpitäjä tai tavallinen käyttä
 * Käyttäjällä on oma profiilisivu, mistä näkyy ladattujen kuvien määrä ja kommenttien määrä. 
 * Käyttäjä voi poistaa omia kuvia ja kommentteja. 
 * Käyttäjä voi etsiä kuvia niiden kuvauksessa annetuilla hakusanoilla. 
+* Käyttäjät voivat lähettää toisilleen viestejä.
 * Ylläpitäjä voi poistaa kaikkien käyttäjien kuvia ja kommentteja. 
 * Ylläpitäjä voi poistaa käyttäjätilin (tai antaa varoituksen?)
+
+
+### Tilanne 29.3.2021
+
+Sovelluksen karkea toiminnallisuus on hahmoteltu. 
