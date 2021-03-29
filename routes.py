@@ -3,7 +3,7 @@ from flask import render_template, request, redirect
 import messages, users
 
 
-@app.route("/")
+@app.route("/", methods=['GET'])
 def index():
     print('1')
     list = messages.get_list() 
