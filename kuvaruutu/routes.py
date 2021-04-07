@@ -5,7 +5,7 @@ from kuvaruutu.forms import CommentForm, PostForm, RegistrationForm, LoginForm
 from werkzeug.security import generate_password_hash
 
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['get'])
 def index():
     list = messages.get_list() 
     comment_count = []
@@ -44,7 +44,7 @@ def new_post():
             return render_template('error.html',message='Viestin lähetys ei onnistunut')
     return render_template('new_post.html', title='Make a New Post', form=form)
 
-@app.route('/comment', methods=['POST'])
+@app.route('/comment', methods=['post'])
 def comment():
     id = request.form['id']
     content = request.form['content']
@@ -77,7 +77,7 @@ def posts(id):
     print('imagen type', type(image))
     return render_template('posts.html', id=id, comments=posts, og_message=og_message, count=len(posts), image=image, form=form)
 
-@app.route('/send', methods=['POST'])
+@app.route('/send', methods=['post'])
 def send():
     print('sendissä')
     #TODO tiedoston nimen ja koon tarkastaminen. 
