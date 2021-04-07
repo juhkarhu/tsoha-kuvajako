@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+{% block title %}Uusi viesti{% endblock %}
+{% block content %}
+<div class='content-section'>
+    <form method='POST' , action='' enctype='multipart/form-data'>
+        {{ form.csrf_token }}
+        <fieldset class='form-group'>
+            <legend class='border-bottom mb-4'>{{ title }}</legend>
+            <div class='form-group'>
+                {{ form.title.label(class='form-control-label') }}
+
+                {% if form.title.errors %}
+                {{ form.username(class='form-control form-control-lg is-invalid') }}
+                <div class='invalid-feedback'>
+                    {% for error in form.title.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.title(class='form-control form-control-lg') }}
+                {% endif %}
+            </div>
+            <div class='form-group'>
+                {{ form.file.label(class='form-control-label') }}
+                {% if form.file.errors %}
+                {{ form.password(class='form-control-file form-control-lg is-invalid') }}
+                <div class='invalid-feedback'>
+                    {% for error in form.file.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                
+                {{ form.file(class='form-control-file form-control-lg') }}
+                {% endif %}
+            </div>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="customFile">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+              </div>
+            <div class='form-group'>
+                {{ form.content.label(class='form-control-label') }}
+
+                {% if form.content.errors %}
+                {{ form.content(class='form-control form-control-lg is-invalid') }}
+                <div class='invalid-feedback'>
+                    {% for error in form.content.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.content(class='form-control form-control-lg') }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class='form-group'>
+            {{ form.submit(class='btn btn-outline-info') }}
+        </div>
+    </form>
+</div>
+{% endblock %}

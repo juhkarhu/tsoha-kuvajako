@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<!-- https://getbootstrap.com/docs/5.0/forms/overview/? -->
+
+
+<head>
+    <meta charset='utf-8'>
+
+
+    <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+
+
+    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css'>
+    <link rel='stylesheet' type='text/css' href='{{ url_for("static", filename="main.css") }}'>
+
+    {% if title %}
+    <title>Kuvaruutu - {{ title }}</title>
+    {% else %}
+    <title>Kuvaruutu</title>
+    {% endif %}
+</head>
+
+<body>
+    <header class='site-header'>
+        <nav class='navbar navbar-expand-md navbar-dark bg-dark fixed-top'>
+            <div class='container'>
+                <a href='/' class='navbar-brand mr-4'>Kuvaruutu</a>
+                <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarToggle'
+                    aria-controls='navbarToggle' aria-expanded='false' aria-label='Toggle navigation'>
+                    <span class='navbar-toggler-icon'></span>
+                </button>
+                <div class='collapse navbar-collapse' id='navbarToggle'>
+                    <div class='navbar-nav mr-auto'>
+                        <a class='nav-item nav-link' href='/'>Etusivu</a>
+                        {% if session.user_id %}
+                        <a class='nav-item nav-link' href='/profile'>Profile</a>
+                        <a class='nav-item nav-link' href='/new_post'>Tee uusi postaus</a>
+                        {% endif %}
+                    </div>
+                    <div class='navbar-nav'>
+                        {% if not session.user_id %}
+                        <a class='nav-item nav-link' href='/login'>Login</a>
+                        <a class='nav-item nav-link' href='/register'>Register</a>
+                        {% else %}
+                        <a class='nav-item nav-link' href='/logout'>Logout</a>
+                        
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role='main' class='container'>
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src='https://code.jquery.com/jquery-3.2.1.slim.min.js'
+        integrity='sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN'
+        crossorigin='anonymous'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js'
+        integrity='sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q'
+        crossorigin='anonymous'></script>
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js'
+        integrity='sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl'
+        crossorigin='anonymous'></script>
+</body>
+
+
+<hr>
+
+</html>

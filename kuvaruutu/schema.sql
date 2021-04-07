@@ -1,6 +1,6 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    username TEXT UNIQUE,
+    username TEXT UNIQUE NOT NULL,
     password TEXT,
     visible INTEGER DEFAULT 1
 );
@@ -12,7 +12,7 @@ CREATE TABLE posts (
     sent_at TIMESTAMP,
     visible INTEGER DEFAULT 1
 );
- 
+
 CREATE TABLE comments (
     id SERIAL PRIMARY KEY, 
     content TEXT, 

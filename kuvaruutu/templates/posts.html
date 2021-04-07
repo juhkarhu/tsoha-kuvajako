@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+{% block title %}Etusivu{% endblock %}
+{% block content %}
+
+
+<!-- kuvan muokkauksesta täällä: https://getbootstrap.com/docs/4.0/content/images/ -->
+
+
+<div class='content-section'>
+    <img src='data:;base64, {{ image }}' class="img-fluid" alt="Post Image"/>
+    <h3>{{ og_message[0][0] }}</h3>
+    <h5>From: {{og_message[0][1] }}, at: {{og_message[0][2].strftime("%d.%m.%Y %H:%M:%S") }}</h5>
+    <p>Tänne lähetettiin tiedot viestistä {{ id }}</p>
+    Kommentteja: {{ count }}<br>
+    {% for comment in comments %}
+    {{comment[1]  }}: {{comment[0] }}
+    <br>
+    {% endfor %}
+    <br>
+    <form method='POST' , action=''>
+        {{ form.csrf_token }}
+        <fieldset class='form-group'>
+            <div class='form-group'>
+                {{ form.content.label(class='form-control-label') }}
+                {% if form.content.errors %}
+                {{ form.content(class='form-control form-control-lg is-invalid') }}
+                <div class='invalid-feedback'>
+                    {% for error in form.content.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.content(class='form-control form-control-lg') }}
+                {% endif %}
+            </div>
+        </fieldset>
+        
+        <div class='form-group'>
+            {{ form.submit(class='btn btn-outline-info') }}
+        </div>
+    </form>
+</div>
+
+<script>
+    function check(form) {
+        if (form.content.value.length > 30) {
+            alert('Viesti on liian pitkä');
+            return false;
+        }
+    }
+</script>
+{% endblock %}
