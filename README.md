@@ -19,3 +19,10 @@ Kuvia voi kommentoida. Käyttäjä on joko ylläpitäjä tai tavallinen käyttä
 ### Tilanne 29.3.2021
 
 Sovelluksen karkea toiminnallisuus on hahmoteltu. 
+
+### Tilanne 8.4.2021
+
+Sovelluksen ulkoasua on alettu muuttamaan ja toiminnallisuuksia hiottu hieman pidemmälle. 
+
+#### Heroku
+https://tsoha-kuvaruutu.herokuapp.com
