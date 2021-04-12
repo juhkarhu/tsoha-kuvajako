@@ -22,10 +22,9 @@ User can be either regular user or admin.
 `source venv/bin/activate`
 - Install required dependencies:
 `pip install -r requirements.txt`
+- Create .env environment file and add some kind of SECRET_KEY and set your psql data ul to DATABASE_URL.
 - Set up the database:
 `psql < schema.sql`
-- Create .env environment file and add some kind of SECRET_KEY and set your psql data ul to DATABASE_URL.
-
 - Run the application with:
 `python run.py`
 
