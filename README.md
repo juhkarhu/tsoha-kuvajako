@@ -25,7 +25,7 @@ Crude functionality has been formed.
 The UI has been altered and added some functionality. 
 
 ### Current status
-Users can login (and create accounts), post and comment on other's posts. 
+Users can login (and create accounts), post and comment on other's posts.  
 TODO: 
 Users: deleting posts and comments.
 Admin-status: deleting posts, comments or users. 
