@@ -3,7 +3,7 @@ The app has a wall that shows posts by other users.
 Posts can be commented. 
 User can be either regular user or admin. 
 
-### Sovelluksen ominaisuuksia
+### Description of planned functionalities
 * User can create an account, log in and log out. 
 * On the front page user sees posts by other users, who and when was it uploaded, and how many comments does the post has.
 * User can upload an image with the post (the image will be mandatory) and write a description about it.
