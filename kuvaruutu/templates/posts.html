@@ -6,7 +6,7 @@
 <!-- kuvan muokkauksesta täällä: https://getbootstrap.com/docs/4.0/content/images/ -->
 
 <div class='content-section'>
-    <img src='data:;base64, {{ image }}' class="img-fluid" alt="Post Image"/>
+    <img src='data:;base64, {{ image[0] }}' class="img-fluid" alt="Post Image"/>
     <h3>{{ og_message[0][0] }}</h3>
     <h5>From: {{og_message[0][1] }}, at: {{og_message[0][2].strftime("%d.%m.%Y %H:%M:%S") }}</h5>
     <p>Tänne lähetettiin tiedot viestistä {{ id }}</p>

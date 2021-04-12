@@ -11,19 +11,17 @@ SIZE = 256, 256
  
 
 def get_all_posts(): 
-    sql = 'SELECT P.content, U.username, P.sent_at, P.id FROM posts P, users U WHERE P.user_id=U.id ORDER BY P.sent_at DESC'
+    sql = 'SELECT P.id, P.title, P.content, U.username, P.sent_at FROM posts P, users U WHERE P.user_id=U.id ORDER BY P.sent_at DESC'
     result = db.session.execute(sql)
     return result.fetchall()
 
 def get_posts_with_id(id):
-    sql = 'SELECT content, sent_at, visible from posts WHERE user_id = :id'
+    sql = 'SELECT P.id, P.title, P.content, U.username, P.sent_at FROM posts P, users U WHERE P.user_id=U.id AND U.id=:id ORDER BY P.sent_at DESC'
     result = db.session.execute(sql, {'id':id})
     return result.fetchall()
 
-def send(content, file):
+def send(title, content, file):
     #TODO Kuvan muokkaus: koko, reso
-    #TODO DATABASEN MUOKKAUS missä posts tablessa on myös kuvat. Ei siis erillistä image tablea. 
-    #TODO Imagen formatointi näytettävään muotoon?
 
     filename = secure_filename(file.filename)
     data=file.read()
@@ -33,8 +31,8 @@ def send(content, file):
     if user_id == 0:
         return False
 
-    sql = 'INSERT INTO posts (content, user_id, sent_at) VALUES (:content, :user_id, NOW()) RETURNING id'
-    result = db.session.execute(sql, {'content':content, 'user_id':user_id})
+    sql = 'INSERT INTO posts (title, content, user_id, sent_at) VALUES (:title, :content, :user_id, NOW()) RETURNING id'
+    result = db.session.execute(sql, {'title':title, 'content':content, 'user_id':user_id})
     message_id = result.fetchone()[0]
     #print('saatu post id', message_id)
     db.session.commit()
@@ -62,6 +60,14 @@ def get_comments_for_post(id):
     comments = result.fetchall()
     return comments
 
+def get_comments_for_user(id):
+    sql = 'SELECT C.content, U.username, C.sent_at ' \
+        'FROM posts P, comments C, users U WHERE U.id=:id AND P.id=C.comment_id AND ' \
+        'U.id=C.user_id ORDER BY C.id'
+    result = db.session.execute(sql, {'id':id})
+    comments = result.fetchall()
+    return comments
+
 def get_one_comment(id):
     sql = 'SELECT P.content, U.username, P.sent_at, P.id FROM posts P, users U WHERE P.id=:id'
     result = db.session.execute(sql, {'id':id})
@@ -74,7 +80,10 @@ def get_image(id):
     result = db.session.execute(sql, {'id':id})
     data = result.fetchone()[0]
     image = b64encode(data).decode('utf-8')
-    return image
+    sql = 'SELECT name, id FROM images WHERE id=:id'
+    result = db.session.execute(sql, {'id':id})
+    filename = result.fetchone()[0]
+    return (image, filename)
 
     # # Tämä toimii ja kirjoittaa kuvan tiedostoon mutta lähetää class intin eteenpäin.
     # with open('kuva.jpg', 'wb') as q:
@@ -90,3 +99,11 @@ def get_image(id):
     # print('response', response)
     # return response
     
+def magnify_the_image(id):
+    sql = 'SELECT data FROM images WHERE id=:id'
+    result = db.session.execute(sql, {'id':id})
+    data = result.fetchone()[0]
+    response = make_response(bytes(data))
+    response.headers.set('Content-Type','image/jpeg')
+    print('response', response)
+    return response

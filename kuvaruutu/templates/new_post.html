@@ -10,7 +10,7 @@
                 {{ form.title.label(class='form-control-label') }}
 
                 {% if form.title.errors %}
-                {{ form.username(class='form-control form-control-lg is-invalid') }}
+                {{ form.title(class='form-control form-control-lg is-invalid') }}
                 <div class='invalid-feedback'>
                     {% for error in form.title.errors %}
                     <span>{{ error }}</span>

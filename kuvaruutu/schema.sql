@@ -7,6 +7,7 @@ CREATE TABLE users (
 
 CREATE TABLE posts (
     id SERIAL PRIMARY KEY,
+    title TEXT,
     content TEXT,
     user_id INTEGER REFERENCES users,
     sent_at TIMESTAMP,
@@ -28,6 +29,5 @@ CREATE TABLE images (
     name TEXT, 
     message_id INTEGER REFERENCES posts,
     data BYTEA,
-    visible INTEGER DEFAULT 1,
-    profile_id INTEGER REFERENCES users
+    visible INTEGER DEFAULT 1
 );

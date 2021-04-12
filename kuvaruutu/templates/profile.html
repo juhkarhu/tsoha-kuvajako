@@ -4,11 +4,28 @@
 {% if not session.user_id %}
 Please login to start sharing your memories.
 {% else %}
+<h4>You have a total of {{ post_amount }} posts.</h4>
+<h3>My Posts</h3>
 
-{% for message in msgs %}
-<p>{{ message }}</p>
+{% for i, message in msgs %}
+
+<img src='data:;base64, {{ images[i][0] }}' class="img-fluid" alt="{{ images[i][1] }}"/>
+<p>
+<i>The id for this post is:</i> {{ message[0] }} 
+<br>
+<i>Title: </i> {{ message[1] }}
+<br>
+<i>Content: </i> {{ message[2] }}
+<br>
+<i>This was posted on</i> {{ message[4].strftime("%Y-%m-%d %H:%M:%S") }}
+<br>
+<hr>
 {% endfor %}
-
+<h4>You have a total of {{ comment_amount }} comment.</h4>
+{% for comment in comments %}
+<p>
+{{ comment }}
+{% endfor %}
 
 {% endif %}
 {% endblock content %}
