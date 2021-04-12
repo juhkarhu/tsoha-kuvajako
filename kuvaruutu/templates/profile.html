@@ -1,8 +1,29 @@
 {% extends 'layout.html' %}
-
 {% block content %}
 
-PROFFIILI
+{% if not session.user_id %}
+Please login to start sharing your memories.
+{% else %}
+
+{% for i, message in messages %}
+
+    <img src='data:;base64, {{ images[i] }}' class="img-fluid" alt="Responsive image"/>
+
+    <p>
+    <i>Viesti:</i> {{ message[0] }} 
+    <p>
+    <i>Lähettäjä:</i> {{ message[1] }}
+    <p>
+    <i>Aika:</i> {{ message[2].strftime("%Y-%m-%d %H:%M:%S") }}
+    <p>
+    <i>Vastauksia: {{ comment_count[i] }} </i>
+    <p>
+    <a href='/posts/{{ message[3] }}'>Vastaa</a> 
+    <hr>
+    {% endfor %}
+
+
+{% endif %}
 
 
 {% endblock content %}

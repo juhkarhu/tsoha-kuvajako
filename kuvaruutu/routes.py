@@ -1,28 +1,29 @@
 from kuvaruutu import app
 from flask import render_template, request, redirect, url_for, flash
-from kuvaruutu import messages, users
+from kuvaruutu import util, users
 from kuvaruutu.forms import CommentForm, PostForm, RegistrationForm, LoginForm
 from werkzeug.security import generate_password_hash
 
 
 @app.route('/', methods=['get'])
 def index():
-    list = messages.get_list() 
+    list = util.get_all_posts() 
     comment_count = []
     images = []
     # Haetaan jokaisen viestin vastausten määrä
     for msg in list:
         id = msg[3]
         # print('nyt haetaan viestin id', msg[3], 'vastausten maaraa')
-        comment_count.append(len(messages.get_comments(id)))
-        images.append(messages.get_image(id))
+        comment_count.append(len(util.get_comments_for_post(id)))
+        images.append(util.get_image(id))
     print('images listan pituus', len(images))
     return render_template('index.html', count=len(list), messages=enumerate(list), comment_count=comment_count, images=images)
 
 @app.route('/show/<int:id>')
 def show(id):
     # TESTIKÄYTTÖ KUVILLE
-    response = messages.get_image(id)
+    # Vaatii util get_image muokkausta toimiakseen. 
+    response = util.get_image(id)
     return response
 
 
@@ -38,7 +39,7 @@ def new_post():
         content = request.form['content']
         if not file:
             return 'nothing uploaded', 400
-        if messages.send(content, file):
+        if util.send(content, file):
             return redirect('/')
         else:
             return render_template('error.html',message='Viestin lähetys ei onnistunut')
@@ -49,7 +50,7 @@ def comment():
     id = request.form['id']
     content = request.form['content']
     # print('saatu id', id, 'ja content', content)
-    if messages.send_comment(content, id):
+    if util.send_comment(content, id):
         return redirect('/comments/' + id)
     else:
         pass
@@ -57,7 +58,11 @@ def comment():
     
 @app.route('/profile')
 def profile():
-    return render_template('profile.html', title='Profilel')
+    id = users.get_user_id()
+    msgs = util.get_posts_with_id(id)
+
+
+    return render_template('profile.html', title='Profilel', msgs=msgs)
     
 
 
@@ -68,14 +73,14 @@ def posts(id):
     if form.validate_on_submit():
         print('kommentoitiin.')
         content = request.form['content']
-        if not messages.send_comment(content, id):
+        if not util.send_comment(content, id):
             return render_template('error.html',message='Viestin lähetys ei onnistunut')
-    og_message = messages.get_one_comment(id)
+    og_message = util.get_one_comment(id)
     message_id = og_message[0][3]
-    posts = messages.get_comments(id)
-    image = messages.get_image(message_id)
+    comments = util.get_comments_for_post(id)
+    image = util.get_image(message_id)
     print('imagen type', type(image))
-    return render_template('posts.html', id=id, comments=posts, og_message=og_message, count=len(posts), image=image, form=form)
+    return render_template('posts.html', id=id, comments=comments, og_message=og_message, count=len(comments), image=image, form=form)
 
 @app.route('/send', methods=['post'])
 def send():
@@ -88,7 +93,7 @@ def send():
     if not file:
         return 'nothing uploaded', 400
 
-    if messages.send(content, file):
+    if util.send(content, file):
         return redirect('/')
     else:
         return render_template('error.html',message='Viestin lähetys ei onnistunut')

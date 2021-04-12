@@ -2,7 +2,7 @@ from flask.app import Flask
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, FileField
 from wtforms.validators import DataRequired, Length, EqualTo, ValidationError
-from kuvaruutu.models import User
+
 
 class RegistrationForm(FlaskForm): 
     username = StringField('Username', 
@@ -41,10 +41,3 @@ class CommentForm(FlaskForm):
     content = StringField('Content', validators=[DataRequired()])
     submit = SubmitField('Post')
 
-
-# id SERIAL PRIMARY KEY, 
-# content TEXT, 
-# comment_id INTEGER REFERENCES posts, 
-# user_id INTEGER REFERENCES users,  
-# sent_at TIMESTAMP,
-# visible INTEGER DEFAULT 1

@@ -31,3 +31,4 @@ CREATE TABLE images (
     visible INTEGER DEFAULT 1,
     profile_id INTEGER REFERENCES users
 );
+
