@@ -6,21 +6,22 @@
 <!-- kuvan muokkauksesta täällä: https://getbootstrap.com/docs/4.0/content/images/ -->
 
 <div class='content-section'>
+
     <img src='data:;base64, {{ image[0] }}' class="img-fluid" alt="Post Image"/>
-    <h3>{{ og_message[0][0] }}</h3>
-    <h5>From: {{og_message[0][1] }}, at: {{og_message[0][2].strftime("%d.%m.%Y") }}</h5>
-    <p>Tänne lähetettiin tiedot viestistä {{ id }}</p>
-    Kommentteja: {{ count }}<br>
+    <br>
+    <h5>Author: {{ post[0][3] }}</h5> 
+    <p>Time: {{ post[0][4].strftime("%d.%m.%Y") }}</p>
+    <h4>Title: {{ post[0][1] }}</h4>
+    <p class='article-content'>Description: {{ post[0][2] }}</p>
+    Comments: {{ count }}<br>
     {% for comment in comments %}
     {{comment[1]  }}: {{comment[0] }}
-    <br>
     {% endfor %}
     <br>
     <form method='POST' , action=''>
         {{ form.csrf_token }}
         <fieldset class='form-group'>
             <div class='form-group'>
-                {{ form.content.label(class='form-control-label') }}
                 {% if form.content.errors %}
                 {{ form.content(class='form-control form-control-lg is-invalid') }}
                 <div class='invalid-feedback'>

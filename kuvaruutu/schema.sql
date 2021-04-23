@@ -2,7 +2,8 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
     password TEXT,
-    visible INTEGER DEFAULT 1
+    visible INTEGER DEFAULT 1,
+    admin INTEGER DEFAULT 0
 );
 
 CREATE TABLE posts (
@@ -23,7 +24,6 @@ CREATE TABLE comments (
     visible INTEGER DEFAULT 1
 );
 
-
 CREATE TABLE images (
     id SERIAL PRIMARY KEY, 
     name TEXT, 
@@ -31,3 +31,4 @@ CREATE TABLE images (
     data BYTEA,
     visible INTEGER DEFAULT 1
 );
+

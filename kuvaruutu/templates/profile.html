@@ -4,41 +4,56 @@
 {% if not session.user_id %}
 Please login to start sharing your memories.
 {% else %}
-
+{{ session.username }}
 {% if post_amount == 0 %}
 <h3>You don't have any posts yet. Consider <a href='/new_post'>making one?</a></h3><br>
 {% else %}
 <h4>You have posted {{ post_amount }} posts.</h4>
 
-{% for i, message in msgs %}
+{% for i, post in posts %}
+
 <article class='media content-section'>
     <div class='media-body'>
-        <a href='/posts/{{ message[0] }}'> <img src='data:;base64, {{ images[i][0] }}' class="img-fluid" alt="{{ images[i][1] }}"/></a>
-        <h4>Title: {{ message[1] }}</h4>
-        <p class='article-content'>Description: {{ message[2] }}</p>
-        <p>This was posted on: {{ message[4].strftime("%d.%m.%Y") }}</p>
-        {% if message[5] == 1 %}
-        <p>Visible to all users: Yes.</p>
-        {% else %}
-        <p>Visible to all users: No.</p>
-        {% endif %}
+        <form action='/profile' method='POST'>
+            <a href='/posts/{{ post[0] }}'> <img src='data:;base64, {{ images[i][0] }}' class='img-fluid' alt='{{ images[i][1] }}' /></a>
+            <h4>Title: {{ post[1] }}</h4>
+            <p class='article-content'>Description: {{ post[2] }}</p>
+            <p>This was posted on: {{ post[4].strftime('%d.%m.%Y') }}</p>
+            {% if post[5] == 1 %}
+            <p>Visible to all users: <strong>Yes.</strong></p>
+            {% else %}
+            <p>Visible to all users: <strong>No.</strong></p>
+            {% endif %}
+            {% if session.user_id == post[6] %}
+            {% endif %}
+
+            <form method='POST' action =''>
+                {{ form.csrf_token }}
+                <fieldset class='form-group'>
+                    <input type='hidden' name='post_id' value='{{ post[0] }}'>
+                    {{ form.submit(class='btn btn-outline-danger') }}
+                </fieldset>
+            </form>
+        </form>
+    </div>
+</article>
 {% endfor %}
 {% endif %}
-</div>
-</article>
+
 
 <article class='media content-section'>
-<div class='media-body'>
-{% if comment_amount == 1 %}
-<h4>You have a total of {{ comment_amount }} comment.</h4>
-{% else %}
-<h4>You have a total of {{ comment_amount }} comments.</h4>
-{% endif %}
-{% for comment in comments %}
-{{ comment[0] }} at {{ comment[2].strftime("%d.%m.%Y") }} for <a href='/posts/{{ comment[3] }}'>this post.</a> <p>
+    <div class='media-body'>
+        {% if comment_amount == 1 %}
+        <h4>You have a total of {{ comment_amount }} comment.</h4>
+        {% else %}
+        <h4>You have a total of {{ comment_amount }} comments.</h4>
+        {% endif %}
+        {% for comment in comments %}
+        {{ comment[0] }} at {{ comment[2].strftime('%d.%m.%Y') }} for <a href='/posts/{{ comment[3] }}'>this post.</a>
+        <p>
 
-{% endfor %}
-</div>
+            {% endfor %}
+    </div>
 </article>
 {% endif %}
 {% endblock content %}

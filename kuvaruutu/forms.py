@@ -39,5 +39,9 @@ class PostForm(FlaskForm):
 
 class CommentForm(FlaskForm):
     content = StringField('Description', validators=[DataRequired()])
-    submit = SubmitField('Post')
+    submit = SubmitField('Comment')
 
+
+class DeleteForm(FlaskForm):
+    post_id = StringField('ID', validators=[DataRequired()])
+    submit = SubmitField('Delete')

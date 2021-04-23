@@ -1,7 +1,8 @@
 from kuvaruutu import app
 from flask import render_template, request, redirect, url_for, flash
 from kuvaruutu import util, users
-from kuvaruutu.forms import CommentForm, PostForm, RegistrationForm, LoginForm
+from kuvaruutu.forms import CommentForm, PostForm, RegistrationForm, LoginForm, DeleteForm
+from werkzeug.datastructures import MultiDict
 
 
 @app.route('/', methods=['get'])
@@ -59,25 +60,28 @@ def comment():
         return redirect('/comments/' + id)
     else:
         pass
-        #TODO Jos vastauksen lähetys ei onnistu
+        #TODO Jos kommentin lähetys ei onnistu
     
-@app.route('/profile')
+@app.route('/profile', methods=['GET','POST'])
 def profile():
+    form = DeleteForm()
+    if request.method == 'POST':
+        post_id = request.form['post_id']
+        util.delete_post(post_id)
+ 
     id = users.get_user_id()
-    msgs = util.get_posts_with_id(id)
+    posts = util.get_posts_with_id(id)
     comments = util.get_comments_for_user(id)
-    post_amount = len(msgs)
+    post_amount = len(posts)
     comment_amount = len(comments)
     images = []
-    for msg in msgs:
+    for msg in posts:
         id = msg[0]
         # print('nyt haetaan viestin id', msg[0], 'vastausten maaraa')
         images.append(util.get_image(id))
 
-    return render_template('profile.html', title='Profile', msgs=enumerate(msgs), images=images, post_amount=post_amount, comments=comments, comment_amount=comment_amount)
+    return render_template('profile.html', title='Profile', posts=enumerate(posts), images=images, post_amount=post_amount, comments=comments, comment_amount=comment_amount, form=form)
     
-
-
 
 @app.route('/posts/<int:id>', methods=['get','post'])
 def posts(id):
@@ -87,14 +91,12 @@ def posts(id):
         content = request.form['content']
         if not util.send_comment(content, id):
             return render_template('error.html',message='Submitting the comment failed.')
-    og_message = util.get_one_comment(id)
-    message_id = og_message[0][3]
+    post = util.get_one_post(id)
+    message_id = post[0][0]
     comments = util.get_comments_for_post(id)
     image = util.get_image(message_id)
     # print('imagen type', type(image))
-    return render_template('posts.html', id=id, comments=comments, og_message=og_message, count=len(comments), image=image, form=form)
-
-
+    return render_template('posts.html', id=id, comments=comments, post=post, count=len(comments), image=image, form=form)
 
 @app.route('/login', methods=['get','post'])
 def login():

@@ -7,17 +7,21 @@ from PIL import Image
 import io
 
 
-
-
 def get_all_posts(): 
-    sql = 'SELECT P.id, P.title, P.content, U.username, P.sent_at, P.visible FROM posts P, users U WHERE P.user_id=U.id ORDER BY P.sent_at DESC'
+    sql = 'SELECT P.id, P.title, P.content, U.username, P.sent_at, P.visible FROM posts P, users U WHERE P.user_id=U.id AND P.visible=1 ORDER BY P.sent_at DESC'
     result = db.session.execute(sql)
     return result.fetchall()
 
 def get_posts_with_id(id):
-    sql = 'SELECT P.id, P.title, P.content, U.username, P.sent_at, P.visible FROM posts P, users U WHERE P.user_id=U.id AND U.id=:id ORDER BY P.sent_at DESC'
+    sql = 'SELECT P.id, P.title, P.content, U.username, P.sent_at, P.visible, P.user_id FROM posts P, users U WHERE U.id=:id AND P.user_id=U.id ORDER BY P.sent_at DESC'
     result = db.session.execute(sql, {'id':id})
     return result.fetchall()
+
+def get_one_post(id):
+    sql = 'SELECT P.id, P.title, P.content, U.username, P.sent_at, P.user_id FROM posts P, users U WHERE P.id=:id and P.user_id=U.id'
+    result = db.session.execute(sql, {'id':id})
+    post = result.fetchall()
+    return post
 
 def send(title, content, file):
     filename = secure_filename(file.filename)
@@ -48,6 +52,13 @@ def send_comment(content, comment_id):
     db.session.commit()
     return True
 
+def delete_post(id):
+    print(f'saatu id {id}')
+    sql = 'UPDATE posts SET visible=0 WHERE id=:id'
+    db.session.execute(sql, {'id':id})
+    db.session.commit()
+    print('awd')
+
 def get_comments_for_post(id):
     sql = 'SELECT C.content, U.username, C.sent_at ' \
         'FROM posts P, comments C, users U WHERE P.id=:id AND P.id=C.comment_id AND ' \
@@ -72,11 +83,7 @@ def get_comments_for_user(id):
     comments = result.fetchall()
     return comments
 
-def get_one_comment(id):
-    sql = 'SELECT P.content, U.username, P.sent_at, P.id FROM posts P, users U WHERE P.id=:id'
-    result = db.session.execute(sql, {'id':id})
-    og_comment = result.fetchall()
-    return og_comment
+
 
 def get_image(id):
     #print('saatu id', id)
@@ -89,19 +96,8 @@ def get_image(id):
     filename = result.fetchone()[0]
     return (image, filename)
 
-    # # Tämä toimii ja kirjoittaa kuvan tiedostoon mutta lähetää class intin eteenpäin.
-    # with open('kuva.jpg', 'wb') as q:
-    #     kuva = q.write(data)
-    #     # fp = io.StringIO()
-    #     # kuva.sa
-    #     # q.write(data)
-    # return kuva
 
-    # # Tämä toimii jos käyttää /show/:id menetelmää
-    # response = make_response(bytes(data))
-    # response.headers.set('Content-Type','image/jpeg')
-    # print('response', response)
-    # return response
+
     
 def magnify_the_image(id):
     sql = 'SELECT data FROM images WHERE id=:id'
