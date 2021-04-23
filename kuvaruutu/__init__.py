@@ -1,7 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from os import getenv
 from flask import Flask
-import flask_resize
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 

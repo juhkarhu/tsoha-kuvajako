@@ -1,7 +1,9 @@
 alembic==1.5.8
+argh==0.26.2
 click==7.1.2
 Flask==1.1.2
 Flask-Migrate==2.7.0
+Flask-Resize==2.0.4
 Flask-Script==2.0.6
 Flask-SQLAlchemy==2.5.1
 Flask-WTF==0.14.3
@@ -11,6 +13,7 @@ itsdangerous==1.1.0
 Jinja2==2.11.3
 Mako==1.1.4
 MarkupSafe==1.1.1
+pilkit==2.0
 Pillow==8.1.2
 psycopg2==2.8.6
 psycopg2-binary==2.8.6
