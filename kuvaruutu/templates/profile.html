@@ -4,28 +4,41 @@
 {% if not session.user_id %}
 Please login to start sharing your memories.
 {% else %}
-<h4>You have a total of {{ post_amount }} posts.</h4>
-<h3>My Posts</h3>
+
+{% if post_amount == 0 %}
+<h3>You don't have any posts yet. Consider <a href='/new_post'>making one?</a></h3><br>
+{% else %}
+<h4>You have posted {{ post_amount }} posts.</h4>
 
 {% for i, message in msgs %}
-
-<img src='data:;base64, {{ images[i][0] }}' class="img-fluid" alt="{{ images[i][1] }}"/>
-<p>
-<i>The id for this post is:</i> {{ message[0] }} 
-<br>
-<i>Title: </i> {{ message[1] }}
-<br>
-<i>Content: </i> {{ message[2] }}
-<br>
-<i>This was posted on</i> {{ message[4].strftime("%Y-%m-%d %H:%M:%S") }}
-<br>
-<hr>
+<article class='media content-section'>
+    <div class='media-body'>
+        <a href='/posts/{{ message[0] }}'> <img src='data:;base64, {{ images[i][0] }}' class="img-fluid" alt="{{ images[i][1] }}"/></a>
+        <h4>Title: {{ message[1] }}</h4>
+        <p class='article-content'>Description: {{ message[2] }}</p>
+        <p>This was posted on: {{ message[4].strftime("%d.%m.%Y") }}</p>
+        {% if message[5] == 1 %}
+        <p>Visible to all users: Yes.</p>
+        {% else %}
+        <p>Visible to all users: No.</p>
+        {% endif %}
 {% endfor %}
+{% endif %}
+</div>
+</article>
+
+<article class='media content-section'>
+<div class='media-body'>
+{% if comment_amount == 1 %}
 <h4>You have a total of {{ comment_amount }} comment.</h4>
+{% else %}
+<h4>You have a total of {{ comment_amount }} comments.</h4>
+{% endif %}
 {% for comment in comments %}
-<p>
-{{ comment }}
-{% endfor %}
+{{ comment[0] }} at {{ comment[2].strftime("%d.%m.%Y") }} for <a href='/posts/{{ comment[3] }}'>this post.</a> <p>
 
+{% endfor %}
+</div>
+</article>
 {% endif %}
 {% endblock content %}

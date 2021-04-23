@@ -6,18 +6,19 @@ from kuvaruutu.forms import CommentForm, PostForm, RegistrationForm, LoginForm
 
 @app.route('/', methods=['get'])
 def index():
-    msgs = util.get_all_posts() 
+    posts = util.get_all_posts() 
     comment_count = []
     images = []
     # Haetaan jokaisen viestin vastausten määrä
-    for msg in msgs:
-        id = msg[0]
+    for post in posts:
+        id = post[0]
         # print('nyt haetaan viestin id', msg[0], 'vastausten maaraa')
         comment_count.append(len(util.get_comments_for_post(id)))
         images.append(util.get_image(id))
     
-    print('images listan pituus', len(images))
-    return render_template('index.html', count=len(msgs), messages=enumerate(msgs), comment_count=comment_count, images=images)
+    # print('images listan pituus', len(images))
+    return render_template('index.html', count=len(posts), posts=enumerate(posts), comment_count=comment_count, images=images)
+
 
 @app.route('/show/<int:id>')
 def show(id):
@@ -46,6 +47,7 @@ def new_post():
             return render_template('error.html',message='Submitting the post failed for some reason.')
     return render_template('new_post.html', title='Make a New Post', form=form)
 
+
 @app.route('/comment', methods=['post'])
 def comment():
     id = request.form['id']
@@ -68,10 +70,9 @@ def profile():
     for msg in msgs:
         id = msg[0]
         # print('nyt haetaan viestin id', msg[0], 'vastausten maaraa')
-        
         images.append(util.get_image(id))
 
-    return render_template('profile.html', title='Profilel', msgs=enumerate(msgs), images=images, post_amount=post_amount, comments=comments, comment_amount=comment_amount)
+    return render_template('profile.html', title='Profile', msgs=enumerate(msgs), images=images, post_amount=post_amount, comments=comments, comment_amount=comment_amount)
     
 
 
@@ -90,23 +91,6 @@ def posts(id):
     image = util.get_image(message_id)
     print('imagen type', type(image))
     return render_template('posts.html', id=id, comments=comments, og_message=og_message, count=len(comments), image=image, form=form)
-
-# This is not used. 
-@app.route('/send', methods=['post'])
-def send():
-    print('sendissä')
-    #TODO tiedoston nimen ja koon tarkastaminen. 
-    file = request.files['file']
-    print('routesissa saatu file', file)
-    print('ja sen type', type(file))
-    content = request.form['content']
-    if not file:
-        return 'nothing uploaded', 400
-
-    if util.send(content, file):
-        return redirect('/')
-    else:
-        return render_template('error.html',message='Viestin lähetys ei onnistunut')
 
 
 

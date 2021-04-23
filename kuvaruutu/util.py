@@ -11,12 +11,12 @@ SIZE = 256, 256
  
 
 def get_all_posts(): 
-    sql = 'SELECT P.id, P.title, P.content, U.username, P.sent_at FROM posts P, users U WHERE P.user_id=U.id ORDER BY P.sent_at DESC'
+    sql = 'SELECT P.id, P.title, P.content, U.username, P.sent_at, P.visible FROM posts P, users U WHERE P.user_id=U.id ORDER BY P.sent_at DESC'
     result = db.session.execute(sql)
     return result.fetchall()
 
 def get_posts_with_id(id):
-    sql = 'SELECT P.id, P.title, P.content, U.username, P.sent_at FROM posts P, users U WHERE P.user_id=U.id AND U.id=:id ORDER BY P.sent_at DESC'
+    sql = 'SELECT P.id, P.title, P.content, U.username, P.sent_at, P.visible FROM posts P, users U WHERE P.user_id=U.id AND U.id=:id ORDER BY P.sent_at DESC'
     result = db.session.execute(sql, {'id':id})
     return result.fetchall()
 
@@ -61,7 +61,7 @@ def get_comments_for_post(id):
     return comments
 
 def get_comments_for_user(id):
-    sql = 'SELECT C.content, U.username, C.sent_at ' \
+    sql = 'SELECT C.content, U.username, C.sent_at, C.comment_id ' \
         'FROM posts P, comments C, users U WHERE U.id=:id AND P.id=C.comment_id AND ' \
         'U.id=C.user_id ORDER BY C.id'
     result = db.session.execute(sql, {'id':id})

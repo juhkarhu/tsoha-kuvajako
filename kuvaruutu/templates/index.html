@@ -5,23 +5,21 @@
 Please login to start sharing your memories.
 {% else %}
 
-{% for i, message in messages %}
-    <i>The id for this post is:</i> {{ message[0] }} 
-    <br>
-    <a href='/show/{{ message[0] }}'> <img src='data:;base64, {{ images[i][0] }}' class="img-fluid" alt="{{ images[i][1] }}"/></a>
-    <p>
-    <i>Author:</i> <strong>{{ message[3] }}</strong>, {{ message[4].strftime("%Y-%m-%d %H:%M:%S") }}
-    <p>
-    <i>Title: </i> {{ message[1] }}
-    <br>
-    <i>Content: </i> {{ message[2] }}
-    <br>
-    <i>Comments: {{ comment_count[i] }} </i>
-    <br>
-    <a href='/posts/{{ message[0] }}'>Comment</a> 
-    <hr>
-    {% endfor %}
 
-
+{% for i, post in posts %}
+<article class='media content-section'>
+    <div class='media-body'>
+        <a href='/posts/{{ post[0] }}'> <img src='data:;base64, {{ images[i][0] }}' class="img-fluid" alt="{{ images[i][1] }}" /></a>
+        <div class='article-metadata'>
+        <a class='mr-2'>Author: {{ post[3] }}</a>
+        <a class='text-muted'>{{ post[4].strftime("%d.%m.%Y") }}</a>  
+        </div>
+        <h4>Title: {{ post[1] }}</h4>
+        <p class='article-content'>Description: {{ post[2] }}</p>
+        <p>Comments: {{ comment_count[i] }}</p>
+        <p><a href='/posts/{{ post[0] }}'>Comment</a></p>
+    </div>
+</article>
+{% endfor %}
 {% endif %}
 {% endblock %}
