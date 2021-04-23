@@ -14,9 +14,15 @@ Please login to start sharing your memories.
         <a class='mr-2'>Author: {{ post[3] }}</a>
         <a class='text-muted'>{{ post[4].strftime("%d.%m.%Y") }}</a>  
         </div>
-        <h4>Title: {{ post[1] }}</h4>
+        <h5>Title: {{ post[1] }}</h5>
         <p class='article-content'>Description: {{ post[2] }}</p>
         <p>Comments: {{ comment_count[i] }}</p>
+
+        {% for i, comment in comments[i] %}
+
+        {{ comment }}
+
+        {% endfor %}
         <p><a href='/posts/{{ post[0] }}'>Comment</a></p>
     </div>
 </article>

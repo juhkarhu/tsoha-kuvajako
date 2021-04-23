@@ -9,15 +9,17 @@ def index():
     posts = util.get_all_posts() 
     comment_count = []
     images = []
+    comments = []
     # Haetaan jokaisen viestin vastausten määrä
     for post in posts:
         id = post[0]
         # print('nyt haetaan viestin id', msg[0], 'vastausten maaraa')
+        comments.append(util.get_comments_for_post_for_index(id))
         comment_count.append(len(util.get_comments_for_post(id)))
         images.append(util.get_image(id))
-    
+        
     # print('images listan pituus', len(images))
-    return render_template('index.html', count=len(posts), posts=enumerate(posts), comment_count=comment_count, images=images)
+    return render_template('index.html', count=len(posts), posts=enumerate(posts), comment_count=comment_count, images=images, comments=enumerate(comments))
 
 
 @app.route('/show/<int:id>')
@@ -35,8 +37,8 @@ def new_post():
         print('post')
     if form.validate_on_submit():
         file = request.files['file']
-        print('routesissa saatu file', file)
-        print('ja sen type', type(file))
+        # print('routesissa saatu file', file)
+        # print('ja sen type', type(file))
         title = request.form['title']
         content = request.form['content']
         if not file:
@@ -81,7 +83,7 @@ def profile():
 def posts(id):
     form = CommentForm()
     if form.validate_on_submit():
-        print('kommentoitiin.')
+        # print('kommentoitiin.')
         content = request.form['content']
         if not util.send_comment(content, id):
             return render_template('error.html',message='Submitting the comment failed.')
@@ -89,7 +91,7 @@ def posts(id):
     message_id = og_message[0][3]
     comments = util.get_comments_for_post(id)
     image = util.get_image(message_id)
-    print('imagen type', type(image))
+    # print('imagen type', type(image))
     return render_template('posts.html', id=id, comments=comments, og_message=og_message, count=len(comments), image=image, form=form)
 
 
@@ -127,5 +129,5 @@ def register():
             return redirect('/')
         else:
             return render_template('error.html',message='Rekisteröinti ei onnistunut')
-    print('ja taas mennään')
+    # print('ja taas mennään')
     return render_template('register.html', title='Register', form=form)

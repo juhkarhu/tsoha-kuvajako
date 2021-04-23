@@ -4,11 +4,10 @@ from kuvaruutu import users
 from werkzeug.utils import secure_filename
 from base64 import b64encode
 from PIL import Image
+import io
 
 
 
-SIZE = 256, 256
- 
 
 def get_all_posts(): 
     sql = 'SELECT P.id, P.title, P.content, U.username, P.sent_at, P.visible FROM posts P, users U WHERE P.user_id=U.id ORDER BY P.sent_at DESC'
@@ -21,12 +20,9 @@ def get_posts_with_id(id):
     return result.fetchall()
 
 def send(title, content, file):
-    #TODO Kuvan muokkaus: koko, reso
-
     filename = secure_filename(file.filename)
-    data=file.read()
-    #print('lahetetyn kuvan data muoto', type(data))
-    
+    data = resize_image(file)
+
     user_id = users.get_user_id()
     if user_id == 0:
         return False
@@ -56,6 +52,14 @@ def get_comments_for_post(id):
     sql = 'SELECT C.content, U.username, C.sent_at ' \
         'FROM posts P, comments C, users U WHERE P.id=:id AND P.id=C.comment_id AND ' \
         'U.id=C.user_id ORDER BY C.id'
+    result = db.session.execute(sql, {'id':id})
+    comments = result.fetchall()
+    return comments
+
+def get_comments_for_post_for_index(id):
+    sql = 'SELECT C.content, U.username, C.sent_at ' \
+        'FROM posts P, comments C, users U WHERE P.id=:id AND P.id=C.comment_id AND ' \
+        'U.id=C.user_id ORDER BY C.id LIMIT 3'
     result = db.session.execute(sql, {'id':id})
     comments = result.fetchall()
     return comments
@@ -107,3 +111,15 @@ def magnify_the_image(id):
     response.headers.set('Content-Type','image/jpeg')
     print('response', response)
     return response
+
+
+def resize_image(file):
+    basewidth = 400
+    img = Image.open(file)
+    wpercent = (basewidth/float(img.size[0]))
+    hsize = int((float(img.size[1])*float(wpercent)))
+    img = img.resize((basewidth,hsize), Image.ANTIALIAS)
+    img_byte_arr = io.BytesIO()
+    img.save(img_byte_arr, format='PNG')
+    img_byte_arr = img_byte_arr.getvalue()
+    return img_byte_arr
