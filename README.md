@@ -37,13 +37,19 @@ Crude functionality has been formed.
 
 The UI has been altered and added some functionality. 
 
+### Tilanne 23.4.2021
+
+The image is resized before being added to the db. You get to the post by clicking the image and the data shown on the profile page has been reworked.  
+
 ### Current status
-Users can login (and create accounts), post and comment on other's posts.  
+Done: 
+Users can login (and create accounts), post and comment on other's posts. 
+Image is resized before being added to the db. 
+
 TODO: 
 Users: deleting posts and comments.
-Admin-status: deleting posts, comments or users. 
+Admin: deleting posts, comments and/or users. 
 Messages. 
-Profile page.
 
 #### Heroku
 The app can be tested on heroku at:
