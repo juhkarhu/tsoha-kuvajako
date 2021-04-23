@@ -65,10 +65,15 @@ def comment():
 @app.route('/profile', methods=['GET','POST'])
 def profile():
     form = DeleteForm()
+    
     if request.method == 'POST':
-        post_id = request.form['post_id']
-        util.delete_post(post_id)
- 
+        if request.form['del_type'] == 'post':
+            post_id = request.form['post_id']
+            util.delete_post(post_id)
+        if request.form['del_type'] == 'comment':
+            comment_id = request.form['comment_id']
+            util.delete_comment(comment_id)
+
     id = users.get_user_id()
     posts = util.get_posts_with_id(id)
     comments = util.get_comments_for_user(id)

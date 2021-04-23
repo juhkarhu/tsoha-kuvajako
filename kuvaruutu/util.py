@@ -53,11 +53,14 @@ def send_comment(content, comment_id):
     return True
 
 def delete_post(id):
-    print(f'saatu id {id}')
     sql = 'UPDATE posts SET visible=0 WHERE id=:id'
     db.session.execute(sql, {'id':id})
     db.session.commit()
-    print('awd')
+
+def delete_comment(id):
+    sql = 'UPDATE comments SET visible=0 WHERE comment_id=:id'
+    db.session.execute(sql, {'id':id})
+    db.session.commit()
 
 def get_comments_for_post(id):
     sql = 'SELECT C.content, U.username, C.sent_at ' \
@@ -76,7 +79,7 @@ def get_comments_for_post_for_index(id):
     return comments
 
 def get_comments_for_user(id):
-    sql = 'SELECT C.content, U.username, C.sent_at, C.comment_id ' \
+    sql = 'SELECT C.content, U.username, C.sent_at, C.comment_id, C.comment_id, C.visible ' \
         'FROM posts P, comments C, users U WHERE U.id=:id AND P.id=C.comment_id AND ' \
         'U.id=C.user_id ORDER BY C.id'
     result = db.session.execute(sql, {'id':id})
