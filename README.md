@@ -50,11 +50,15 @@ Done:
 Users can login (and create accounts), post and comment on other's posts and delete their own posts and comments (they remain visible to the author in the profile section). 
 Image are resized before being added to the db. 
 Users: deleting posts and comments.
-Admin: deleting posts, comments and/or users. 
+Admin: deleting posts, comments and banning users. 
 
 TODO: 
 Messages. 
 
-#### Heroku
+## Heroku
 The app can be tested on heroku at:
 https://tsoha-kuvaruutu.herokuapp.com
+
+For the duration of TKT20011, Aineopintojen harjoitustyö: Tietokantasovellus. There is ready-made admin-account for testers.
+Username: tester
+Password: jokunen1234
