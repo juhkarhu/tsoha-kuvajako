@@ -147,15 +147,14 @@ def comment():
 def posts(id):
     form = CommentForm()
     if form.validate_on_submit():
-        # print('kommentoitiin.')
         content = request.form['content']
         if not util.send_comment(content, id):
             return render_template('error.html',message='Submitting the comment failed.')
+        return redirect('/posts/' + str(id))  
     post = util.get_one_post(id)
     message_id = post[0][0]
     comments = util.get_comments_for_post(id)
     image = util.get_image(message_id)
-    # print('imagen type', type(image))
     return render_template('posts.html', id=id, comments=comments, post=post, count=len(comments), image=image, form=form)
 
 @app.route('/login', methods=['get','post'])
