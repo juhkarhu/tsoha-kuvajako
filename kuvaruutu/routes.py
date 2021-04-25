@@ -8,13 +8,13 @@ from werkzeug.datastructures import MultiDict
 
 @app.route('/', methods=['get', 'post'])
 def index():
-    searchform = SearchForm()
+    
 
     posts = util.get_all_posts() 
     comment_count = []
     images = []
     comments = []
-    # Fetches the image for all the posts and the
+    # Fetches the image and comments for all the posts
     for post in posts:
         id = post[0]
         comments.append(util.get_comments_for_post_for_index(id))
@@ -25,14 +25,16 @@ def index():
 
 @app.route('/search', methods=['get', 'post'])
 def search():
-    query = request.GET.get('search')
-    print(query)
-    searchform = SearchForm()
-    posts = util.get_all_posts() 
+    form = SearchForm()
+    if form.validate_on_submit():
+        keyword = '%{}%'.format(request.form['query'])
+        posts = util.search_all_posts(keyword)
+    else:
+        posts = util.get_all_posts() 
     comment_count = []
     images = []
     comments = []
-    # Fetches the image for all the posts and the
+    # Fetches the image and comments for all the posts
     for post in posts:
         id = post[0]
         comments.append(util.get_comments_for_post_for_index(id))
@@ -40,12 +42,13 @@ def search():
         images.append(util.get_image(id))
     # print('comments', comments)
 
-    return render_template('search.html', count=len(posts), posts=enumerate(posts), comment_count=comment_count, images=images, comments=comments)
+    return render_template('search.html', form=form, count=len(posts), posts=enumerate(posts), comment_count=comment_count, images=images, comments=comments)
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     '''
-    This is pretty similar to index and profile pages. The exception is, that every post and every comment gets loaded and can be deleted. 
+    This is pretty similar to index and profile pages. 
+    The exception is, that every post and every comment gets loaded and can be deleted. 
     
     '''
     form = AdminForm()
@@ -84,13 +87,15 @@ def admin():
 def profile():
     form = DeleteForm()
     if request.method == 'POST':
-        
+
         if request.form['del_type'] == 'post':
             post_id = request.form['post_id']
             util.delete_post(post_id)
+            return redirect('/profile')
         if request.form['del_type'] == 'comment':
             comment_id = request.form['comment_id']
             util.delete_comment(comment_id)
+            return redirect('/profile')
 
     id = users.get_user_id()
     posts = util.get_posts_for_profile(id)
@@ -102,9 +107,8 @@ def profile():
     #     id = post[0]
     #     # print('nyt haetaan viestin id', msg[0], 'vastausten maaraa')
     #     images.append(util.get_image(id))
-
     return render_template('profile.html', title='Profile', posts=enumerate(posts), images=images, post_amount=post_amount, comments=comments, comment_amount=comment_amount, form=form)
- 
+
 
 
 @app.route('/new_post', methods=['get','post'])
@@ -127,21 +131,6 @@ def new_post():
     return render_template('new_post.html', title='Make a New Post', form=form)
 
 
-@app.route('/comment', methods=['post'])
-def comment():
-    '''
-    If user makes a comment, it is sent here. 
-    '''
-    id = request.form['id']
-    content = request.form['content']
-    # print('saatu id', id, 'ja content', content)
-    if util.send_comment(content, id):
-        return redirect('/comments/' + id)
-    else:
-        pass
-        #TODO Jos kommentin lähetys ei onnistu
-    
-   
 
 @app.route('/posts/<int:id>', methods=['get','post'])
 def posts(id):
@@ -150,7 +139,7 @@ def posts(id):
         content = request.form['content']
         if not util.send_comment(content, id):
             return render_template('error.html',message='Submitting the comment failed.')
-        return redirect('/posts/' + str(id))  
+        return redirect('/posts/' + str(id))
     post = util.get_one_post(id)
     message_id = post[0][0]
     comments = util.get_comments_for_post(id)
@@ -182,13 +171,9 @@ def register():
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
-        # username = request.form['username']
-        # password = request.form['password']
-        # print(form.username.data, request.form['username'])
         if users.register(username,password):
             flash(f'Account created for {form.username.data}', 'success')
             return redirect('/')
         else:
             return render_template('error.html',message='Rekisteröinti ei onnistunut')
-    # print('ja taas mennään')
     return render_template('register.html', title='Register', form=form)

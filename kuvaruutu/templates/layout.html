@@ -38,26 +38,21 @@
                     <div class='navbar-nav mr-auto'>
                         <a class='nav-item nav-link' href='/'>Front Page</a>
                         {% if session.user_id %}
-                        <a class='nav-item nav-link' href='/profile'>Profile - {{ session.username }}</a>
-                        <a class='nav-item nav-link' href='/new_post'>Make a New Post</a>
-                       
-                        <form method='post' class="form-inline my-2 my-lg-0" action='{{url_for("search") }}' >
-                            
-                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                          </form>
+                        <a class='nav-item nav-link' href='{{ url_for("profile") }}'>Profile - {{ session.username }}</a>
+                        <a class='nav-item nav-link' href='{{ url_for("new_post") }}'>Make a New Post</a>
+                        <a class='nav-item nav-link' href='{{ url_for("search") }}'>Search</a>
                         {% endif %}
                     </div>
                     <div class='navbar-nav'>
                         {% if not session.user_id %}
-                        <a class='nav-item nav-link' href='/login'>Login</a>
-                        <a class='nav-item nav-link' href='/register'>Register</a>
+                        <a class='nav-item nav-link' href='{{ url_for("login") }}'>Login</a>
+                        <a class='nav-item nav-link' href='{{ url_for("register") }}'>Register</a>
                         {% else %}
 
                         {% if session.admin %}
-                        <a class='nav-item nav-link' href='/admin'>Admin Tools</a>
+                        <a class='nav-item nav-link' href='{{ url_for("admin") }}'>Admin Tools</a>
                         {% endif %}
-                        <a class='nav-item nav-link' href='/logout'>Logout</a>
+                        <a class='nav-item nav-link' href='{{ url_for("logout") }}'>Logout</a>
                         {% endif %}
                     </div>
                 </div>

@@ -17,9 +17,9 @@ def get_all_posts_as_admin():
     result = db.session.execute(sql)
     return result.fetchall()
 
-def search_all_posts(): 
-    sql = 'SELECT P.id, P.title, P.content, U.username, P.sent_at, P.visible FROM posts P, users U WHERE P.user_id=U.id AND P.visible=1 ORDER BY P.sent_at DESC'
-    result = db.session.execute(sql)
+def search_all_posts(keyword): 
+    sql = 'SELECT DISTINCT ON (P.sent_at) P.id, P.title, P.content, U.username, P.sent_at, P.visible FROM posts P, users U WHERE P.user_id=U.id AND P.visible=1 AND P.title ILIKE :keyword OR P.content ILIKE :keyword GROUP BY P.id, U.username'
+    result = db.session.execute(sql, {'keyword':keyword})
     return result.fetchall()
 
 def get_posts_for_profile(id):

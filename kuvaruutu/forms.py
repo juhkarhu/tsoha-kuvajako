@@ -31,7 +31,6 @@ class CommentForm(FlaskForm):
     content = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Comment')
 
-
 class DeleteForm(FlaskForm):
     post_id = StringField('ID')
     comment_id = StringField('ID')
@@ -45,5 +44,5 @@ class AdminForm(FlaskForm):
     submit = SubmitField('Delete')
 
 class SearchForm(FlaskForm):
-    query = StringField('Search')
+    query = StringField('Search', validators=[Length(min=3, max=20)])
     submit = SubmitField('Search')

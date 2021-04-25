@@ -2,6 +2,30 @@
 {% block content %}
 
 
+<div class='content-section'>
+    <form method='POST' , action='' enctype='multipart/form-data'>
+        {{ form.csrf_token }}
+        <fieldset class='form-group'>
+            <div class='form-group'>
+                {{ form.query.label(class='form-control-label') }}
+
+                {% if form.query.errors %}
+                {{ form.query(class='form-control form-control-lg is-invalid') }}
+                <div class='invalid-feedback'>
+                    {% for error in form.query.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.query(class='form-control form-control-lg') }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class='form-group'>
+            {{ form.submit(class='btn btn-outline-info') }}
+        </div>
+    </form>
+</div>
 {% for i, post in posts %}
 <article class='media content-section'>
     <div class='media-body'>

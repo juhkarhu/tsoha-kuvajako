@@ -43,7 +43,7 @@ The image is resized before being added to the db. You get to the post by clicki
 
 ### Tilanne 25.4.2021
 
-Both users and admins can delete posts and comments, and admins can ban users. The implementation is harsh as there's no any kind of confirmation as of yet. 
+Both users and admins can delete posts and comments, and admins can ban users. The implementation is harsh as there's no any kind of confirmation as of yet. Also added a search functionality that searches keywords in posts' title and description. 
 
 ### Current status
 Done: 
@@ -51,9 +51,11 @@ Users can login (and create accounts), post and comment on other's posts and del
 Image are resized before being added to the db. 
 Users: deleting posts and comments.
 Admin: deleting posts, comments and banning users. 
+Search-functionality.
 
 TODO: 
-Messages. 
+Messages.
+
 
 ## Heroku
 The app can be tested on heroku at:
