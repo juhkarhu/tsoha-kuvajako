@@ -55,7 +55,7 @@ Done:
 - Search-functionality.
 
 TODO: 
-Messages.
+- Messages.
 
 
 ## Heroku
