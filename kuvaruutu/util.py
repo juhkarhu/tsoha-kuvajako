@@ -224,7 +224,7 @@ def resize_image(file):
     basewidth = 400
     img = Image.open(file)
     
-    img = ImageOps.exif_transpose(img)
+    #img = ImageOps.exif_transpose(img)
 
     wpercent = (basewidth/float(img.size[0]))
     hsize = int((float(img.size[1])*float(wpercent)))
