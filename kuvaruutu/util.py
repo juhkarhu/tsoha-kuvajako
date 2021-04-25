@@ -3,7 +3,7 @@ from flask import make_response
 from kuvaruutu import users
 from werkzeug.utils import secure_filename
 from base64 import b64encode
-from PIL import Image
+from PIL import Image, ImageOps
 import io
 
 
@@ -223,11 +223,14 @@ def resize_image(file):
     '''
     basewidth = 400
     img = Image.open(file)
-    wpercent = (basewidth/float(img.size[0]))
+    
+    fixed_image = ImageOps.exif_transpose(img)
+
+    wpercent = (basewidth/float(fixed_image.size[0]))
     hsize = int((float(img.size[1])*float(wpercent)))
-    img = img.resize((basewidth,hsize), Image.ANTIALIAS)
+    ifixed_imagemg = fixed_image.resize((basewidth,hsize), Image.ANTIALIAS)
     img_byte_arr = io.BytesIO()
-    img.save(img_byte_arr, format='PNG')
+    fixed_image.save(img_byte_arr, format='PNG')
     img_byte_arr = img_byte_arr.getvalue()
     return img_byte_arr
 
