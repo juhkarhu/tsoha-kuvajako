@@ -58,7 +58,3 @@ Messages.
 ## Heroku
 The app can be tested on heroku at:
 https://tsoha-kuvaruutu.herokuapp.com
-
-For the duration of TKT20011, Aineopintojen harjoitustyö: Tietokantasovellus. There is ready-made admin-account for testers.
-Username: tester
-Password: jokunen1234
