@@ -224,13 +224,13 @@ def resize_image(file):
     basewidth = 400
     img = Image.open(file)
     
-    fixed_image = ImageOps.exif_transpose(img)
+    img = ImageOps.exif_transpose(img)
 
-    wpercent = (basewidth/float(fixed_image.size[0]))
+    wpercent = (basewidth/float(img.size[0]))
     hsize = int((float(img.size[1])*float(wpercent)))
-    ifixed_imagemg = fixed_image.resize((basewidth,hsize), Image.ANTIALIAS)
+    img = img.resize((basewidth,hsize), Image.ANTIALIAS)
     img_byte_arr = io.BytesIO()
-    fixed_image.save(img_byte_arr, format='PNG')
+    img.save(img_byte_arr, format='PNG')
     img_byte_arr = img_byte_arr.getvalue()
     return img_byte_arr
 
