@@ -224,7 +224,20 @@ def resize_image(file):
     basewidth = 400
     img = Image.open(file)
     
-    #img = ImageOps.exif_transpose(img)
+    try:
+    # Grab orientation value.
+        image_exif = img._getexif()
+        image_orientation = image_exif[274]
+    # Rotate depending on orientation.
+        if image_orientation == 3:
+            rotated = img.rotate(180)
+        if image_orientation == 6:
+            rotated = img.rotate(-90)
+        if image_orientation == 8:
+            rotated = img.rotate(90)
+        img = rotated
+    except:
+        pass
 
     wpercent = (basewidth/float(img.size[0]))
     hsize = int((float(img.size[1])*float(wpercent)))
