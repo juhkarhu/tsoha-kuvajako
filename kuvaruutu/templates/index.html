@@ -19,7 +19,7 @@ Please login to start sharing your memories.
         {% if comment_count[i] > 0 %}
         <p>Most Recent Comments:</p>
         {% for comment in comments[i] %}
-        <p>{{ comment[0] }}</p>
+        <p>{{ comment[1] }} sanoo: {{ comment[0] }}</p>
         {% endfor %}
         {% else %}
         <p>No Comments Yet.</p>
