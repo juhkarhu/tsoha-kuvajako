@@ -13,16 +13,6 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign up')
 
 
-    # def validate_username(self, username):
-    #     user = User.query.filter_by(username=username.data).first()
-    #     if user:
-    #         raise ValidationError('That username is taken. Please choose a different one.')
-
-    # def validate_email(self, email):
-    #     user = User.query.filter_by(email=email.data).first()
-    #     if user:
-    #         raise ValidationError('That email is taken. Please choose a different one.')
-
 class LoginForm(FlaskForm):
     username = StringField('Username', 
                             validators=[DataRequired(), Length(min=3, max=20)])
@@ -46,4 +36,14 @@ class DeleteForm(FlaskForm):
     post_id = StringField('ID')
     comment_id = StringField('ID')
     del_type = StringField('ID')
+    submit = SubmitField('Hide/Show')
+
+class AdminForm(FlaskForm):
+    post_id = StringField('ID')
+    comment_id = StringField('ID')
+    del_type = StringField('ID')
     submit = SubmitField('Delete')
+
+class SearchForm(FlaskForm):
+    query = StringField('Search')
+    submit = SubmitField('Search')

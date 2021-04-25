@@ -1,10 +1,6 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-{% if not session.user_id %}
-Please login to start sharing your memories.
-{% else %}
-
 
 {% for i, post in posts %}
 <article class='media content-section'>
@@ -28,5 +24,5 @@ Please login to start sharing your memories.
     </div>
 </article>
 {% endfor %}
-{% endif %}
+
 {% endblock %}

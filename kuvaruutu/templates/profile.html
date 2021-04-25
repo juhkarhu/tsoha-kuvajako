@@ -4,7 +4,6 @@
 {% if not session.user_id %}
 Please login to start sharing your memories.
 {% else %}
-{{ session.username }}
 {% if post_amount == 0 %}
 <h3>You don't have any posts yet. Consider <a href='/new_post'>making one?</a></h3><br>
 {% else %}

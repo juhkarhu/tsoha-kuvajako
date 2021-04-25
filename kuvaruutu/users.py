@@ -1,19 +1,19 @@
-from kuvaruutu import db
+from kuvaruutu import db, util
 from flask import session
 from werkzeug.security import check_password_hash, generate_password_hash
 import os
 
 def login(username,password):
-    sql = 'SELECT password, id FROM users WHERE username=:username'
+    sql = 'SELECT password, id, username FROM users WHERE username=:username'
     result = db.session.execute(sql, {'username':username})
     user = result.fetchone()
     if user == None:
         return False
     else:
         if check_password_hash(user[0],password):
+            session['username'] = user[2]
             session['user_id'] = user[1]
-            session['username'] = username
-            # session['csrf_token'] = os.urandom(16).hex()
+            session['admin'] = is_admin()
             return True
         else:
             return False
@@ -37,3 +37,7 @@ def register(username,password):
 
 def get_user_id():
     return session.get('user_id',0)
+
+def is_admin():
+    status = util.is_admin_query()
+    return status

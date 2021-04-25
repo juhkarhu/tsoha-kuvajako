@@ -1,0 +1,79 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+{% if not session.user_id %}
+Please login to start sharing your memories.
+{% else %}
+
+{% for user in users %}
+
+<article class='media content-section'>
+    <div class='media-body'>
+        {% if user[2] == 1%}
+        <h6>This User Has Been Banned</h6>
+        {% endif %}
+        <form method='post' action=''>
+            {{ form.csrf_token }}
+            <p>{{ user[1] }}</p>
+            <input type='hidden' name='user_id' value='{{ user[0] }}'>
+            <input type='hidden' name='del_type' value='user'>
+            <p>{{ form.submit(class='btn btn-outline-danger') }} </p>
+        </form>
+    </div>
+</article>
+
+{% endfor %}
+
+{% for i, post in posts %}
+<article class='media content-section'>
+    <div class='media-body'>
+
+        <a href='/posts/{{ post[0] }}'> <img src='data:;base64, {{ images[i][0] }}' class="img-fluid"
+                alt="{{ images[i][1] }}" /></a>
+        <div class='article-metadata'>
+            <a class='mr-2'>Author: {{ post[3] }}</a>
+            <a class='text-muted'>{{ post[4].strftime("%d.%m.%Y") }}</a>
+        </div>
+        <h5>Title: {{ post[1] }}</h5>
+        <p class='article-content'>Description: {{ post[2] }}</p>
+        {% if post[5] == 1 %}
+        <p>Visible to all users: <strong>Yes.</strong></p>
+        {% else %}
+        <p>Visible to all users: <strong>No.</strong></p>
+        {% endif %}
+        {% if session.user_id == post[6] %}
+        {% endif %}
+        <form method='post' action=''>
+            {{ form.csrf_token }}
+            <input type='hidden' name='post_id' value='{{ post[0] }}'>
+            <input type='hidden' name='del_type' value='post'>
+            <p>{{ form.submit(class='btn btn-outline-danger') }} </p>
+        </form>
+
+
+        <p>All Comments:</p>
+        {% for comment in comments[i] %}
+        <article class='media content-section'>
+            <div class='media-body'>
+                <form method='post' action=''>
+                    {{ form.csrf_token }}
+                    <input type='hidden' name='comment_id' value='{{ comment[3] }}'>
+                    <input type='hidden' name='del_type' value='comment'>
+                    <p>{{comment[1] }} sanoi: {{ comment[0] }} {{ form.submit(class='btn btn-outline-danger') }} </p>
+                    {% if comment[4] == 1 %}
+                    <p>Visible to all users: <strong>Yes.</strong></p>
+                    {% else %}
+                    <p>Visible to all users: <strong>No.</strong></p>
+                    {% endif %}
+                </form>
+            </div>
+        </article>
+        {% endfor %}
+
+
+        <p><a href='/posts/{{ post[0] }}'>Comment</a></p>
+    </div>
+</article>
+{% endfor %}
+{% endif %}
+{% endblock %}

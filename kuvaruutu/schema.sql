@@ -3,7 +3,8 @@ CREATE TABLE users (
     username TEXT UNIQUE NOT NULL,
     password TEXT,
     visible INTEGER DEFAULT 1,
-    admin INTEGER DEFAULT 0
+    admin INTEGER DEFAULT 0,
+    banned INTEGER DEFAULT 0
 );
 
 CREATE TABLE posts (
@@ -18,7 +19,7 @@ CREATE TABLE posts (
 CREATE TABLE comments (
     id SERIAL PRIMARY KEY, 
     content TEXT, 
-    comment_id INTEGER REFERENCES posts, 
+    post_id INTEGER REFERENCES posts, 
     user_id INTEGER REFERENCES users,  
     sent_at TIMESTAMP,
     visible INTEGER DEFAULT 1

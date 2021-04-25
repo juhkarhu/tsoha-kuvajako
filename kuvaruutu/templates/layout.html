@@ -38,8 +38,14 @@
                     <div class='navbar-nav mr-auto'>
                         <a class='nav-item nav-link' href='/'>Front Page</a>
                         {% if session.user_id %}
-                        <a class='nav-item nav-link' href='/profile'>Profile</a>
+                        <a class='nav-item nav-link' href='/profile'>Profile - {{ session.username }}</a>
                         <a class='nav-item nav-link' href='/new_post'>Make a New Post</a>
+                       
+                        <form method='post' class="form-inline my-2 my-lg-0" action='{{url_for("search") }}' >
+                            
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                          </form>
                         {% endif %}
                     </div>
                     <div class='navbar-nav'>
@@ -47,8 +53,11 @@
                         <a class='nav-item nav-link' href='/login'>Login</a>
                         <a class='nav-item nav-link' href='/register'>Register</a>
                         {% else %}
+
+                        {% if session.admin %}
+                        <a class='nav-item nav-link' href='/admin'>Admin Tools</a>
+                        {% endif %}
                         <a class='nav-item nav-link' href='/logout'>Logout</a>
-                        
                         {% endif %}
                     </div>
                 </div>
@@ -58,6 +67,7 @@
 
     <main role='main' class='container'>
         {% block content %}{% endblock %}
+
     </main>
 
     <script src='https://code.jquery.com/jquery-3.2.1.slim.min.js'
