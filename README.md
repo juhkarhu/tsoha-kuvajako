@@ -47,11 +47,11 @@ Both users and admins can delete posts and comments, and admins can ban users. T
 
 ### Current status
 Done: 
-Users can login (and create accounts), post and comment on other's posts and delete their own posts and comments (they remain visible to the author in the profile section). 
+-Users can login (and create accounts), post and comment on other's posts and delete their own posts and comments (they remain visible to the author in the profile section). 
 Image are resized before being added to the db. 
-Users: deleting posts and comments.
-Admin: deleting posts, comments and banning users. 
-Search-functionality.
+-Users: deleting posts and comments.
+-Admin: deleting posts, comments and banning users. 
+-Search-functionality.
 
 TODO: 
 Messages.
