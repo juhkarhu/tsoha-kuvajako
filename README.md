@@ -41,14 +41,18 @@ The UI has been altered and added some functionality.
 
 The image is resized before being added to the db. You get to the post by clicking the image and the data shown on the profile page has been reworked. Users can delete their own posts and comments from their profile page. 
 
+### Tilanne 25.4.2021
+
+Both users and admins can delete posts and comments, and admins can ban users. The implementation is harsh as there's no any kind of confirmation as of yet. 
+
 ### Current status
 Done: 
 Users can login (and create accounts), post and comment on other's posts and delete their own posts and comments (they remain visible to the author in the profile section). 
 Image are resized before being added to the db. 
-
-TODO: 
 Users: deleting posts and comments.
 Admin: deleting posts, comments and/or users. 
+
+TODO: 
 Messages. 
 
 #### Heroku
