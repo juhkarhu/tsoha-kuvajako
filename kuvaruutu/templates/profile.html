@@ -60,7 +60,7 @@ Please login to start sharing your memories.
         <form method='POST' action=''>
             {{ form.csrf_token }}
             <fieldset class='form-group'>
-                <input type='hidden' name='comment_id' value='{{ comment[4] }}'>
+                <input type='hidden' name='comment_id' value='{{ comment[3] }}'>
                 <input type='hidden' name='del_type' value='comment'>
                 {{ form.submit(class='btn btn-outline-danger btn-sm') }}
             </fieldset>

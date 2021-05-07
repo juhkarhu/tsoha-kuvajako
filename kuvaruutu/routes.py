@@ -8,63 +8,48 @@ from werkzeug.datastructures import MultiDict
 
 @app.route('/', methods=['get', 'post'])
 def index():
-    
+    '''
+    Serves the frontpage. Displays all the post and 3 most recent comment for each post.
+    Images are in a separate table and are fetched to each post independently.
+    '''
+    posts = util.get_all_posts()
+    comment_count, images, comments = util.get_images_and_comments(posts)
 
-    posts = util.get_all_posts() 
-    comment_count = []
-    images = []
-    comments = []
-    # Fetches the image and comments for all the posts
-    for post in posts:
-        id = post[0]
-        comments.append(util.get_comments_for_post_for_index(id))
-        comment_count.append(len(util.get_comments_for_post(id)))
-        images.append(util.get_image(id))
-    # print('comments', comments)
     return render_template('index.html', count=len(posts), posts=enumerate(posts), comment_count=comment_count, images=images, comments=comments)
 
 @app.route('/search', methods=['get', 'post'])
 def search():
+    '''
+    Users can search for posts using keywords.
+    '''
     form = SearchForm()
     if form.validate_on_submit():
         keyword = '%{}%'.format(request.form['query'])
         posts = util.search_all_posts(keyword)
     else:
         posts = util.get_all_posts() 
-    comment_count = []
-    images = []
-    comments = []
-    # Fetches the image and comments for all the posts
-    for post in posts:
-        id = post[0]
-        comments.append(util.get_comments_for_post_for_index(id))
-        comment_count.append(len(util.get_comments_for_post(id)))
-        images.append(util.get_image(id))
-    # print('comments', comments)
+    comment_count, images, comments = util.get_images_and_comments(posts)
 
     return render_template('search.html', form=form, count=len(posts), posts=enumerate(posts), comment_count=comment_count, images=images, comments=comments)
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     '''
-    This is pretty similar to index and profile pages. 
-    The exception is, that every post and every comment gets loaded and can be deleted. 
-    
+    This is pretty similar to index and profile pages.
+    The exception is, that every post and every comment gets loaded and can be deleted.
     '''
     form = AdminForm()
     if users.is_admin():
         if request.method == 'POST':
             if request.form['del_type'] == 'post':
                 post_id = request.form['post_id']
-                print(f'post_id {post_id}')
                 util.delete_post(post_id)
             if request.form['del_type'] == 'comment':
                 comment_id = request.form['comment_id']
-                print(f'comment_id {comment_id}')
                 util.delete_comment(comment_id)
             if request.form['del_type'] == 'user':
-                print('BANHAMMER')
                 user_id = request.form['user_id']
+                print(user_id)
                 util.ban_user(user_id)
         
         id = users.get_user_id()
@@ -85,9 +70,11 @@ def admin():
 
 @app.route('/profile', methods=['GET','POST'])
 def profile():
+    '''
+    Shows all the users posts and comments.
+    '''
     form = DeleteForm()
     if request.method == 'POST':
-
         if request.form['del_type'] == 'post':
             post_id = request.form['post_id']
             util.delete_post(post_id)
@@ -95,7 +82,6 @@ def profile():
         if request.form['del_type'] == 'comment':
             comment_id = request.form['comment_id']
             util.delete_comment(comment_id)
-            return redirect('/profile')
 
     id = users.get_user_id()
     posts = util.get_posts_for_profile(id)
@@ -103,23 +89,19 @@ def profile():
     post_amount = len(posts)
     comment_amount = len(comments)
     images = util.get_images_for_posts(posts)
-    # for post in posts:
-    #     id = post[0]
-    #     # print('nyt haetaan viestin id', msg[0], 'vastausten maaraa')
-    #     images.append(util.get_image(id))
     return render_template('profile.html', title='Profile', posts=enumerate(posts), images=images, post_amount=post_amount, comments=comments, comment_amount=comment_amount, form=form)
 
 
 
 @app.route('/new_post', methods=['get','post'])
 def new_post():
+    '''
+    Form for adding a new post.
+    Input file is mandatory.
+    '''
     form = PostForm()
-    # if request.method == 'POST':
-    #     print('post')
     if form.validate_on_submit():
         file = request.files['file']
-        # print('routesissa saatu file', file)
-        # print('ja sen type', type(file))
         title = request.form['title']
         content = request.form['content']
         if not file:
@@ -152,9 +134,12 @@ def login():
     if form.validate_on_submit():
         username = request.form['username']
         password = request.form['password']
-        if users.login(username,password):
+        (okay, banned) = users.login(username,password)
+        if okay:
             flash(f'Welcome {form.username.data}', 'success')
             return redirect('/')
+        elif (banned == 'banned'):
+            return render_template('error.html',message='Your account has been suspended by admins.')
         else:
             return render_template('error.html',message='Väärä tunnus tai salasana')
 

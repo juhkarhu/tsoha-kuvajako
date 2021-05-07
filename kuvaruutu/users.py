@@ -4,32 +4,28 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import os
 
 def login(username,password):
-    sql = 'SELECT password, id, username FROM users WHERE username=:username'
+    sql = 'SELECT password, id, username, banned FROM users WHERE username=:username'
     result = db.session.execute(sql, {'username':username})
     user = result.fetchone()
     if user == None:
-        return False
+        return False, 'none'
     else:
-        if check_password_hash(user[0],password):
+        if check_password_hash(user[0],password) and user[3] == 0:
             session['username'] = user[2]
             session['user_id'] = user[1]
             session['admin'] = is_admin()
-            return True
+            return True, 'none'
         else:
-            return False
+            return False, 'banned'
 
 def logout():
     del session['user_id']
 
 def register(username,password):
     hash_value = generate_password_hash(password)
-    print('1')
     try:
-        print('2')
         sql = 'INSERT INTO users (username,password) VALUES (:username,:password)'
-        print('3')
         db.session.execute(sql, {'username':username,'password':hash_value})
-        print('4')
         db.session.commit()
     except:
         return False

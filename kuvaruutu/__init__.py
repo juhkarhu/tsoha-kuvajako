@@ -6,15 +6,12 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 from flask_wtf.csrf import CSRFProtect
 
-
-
 app = Flask(__name__)
 app.secret_key = getenv("SECRET_KEY")
 app.config['SQLALCHEMY_DATABASE_URI'] = getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 csrf = CSRFProtect(app)
 csrf.init_app(app)
-
 
 db = SQLAlchemy(app)
 

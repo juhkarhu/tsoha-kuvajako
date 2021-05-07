@@ -92,7 +92,6 @@ def admin_search(keyword):
 
     return users, posts, comments
 
-
 def admin_search_for_user(keyword):
     sql = 'SELECT id, username FROM users WHERE username LIKE :keyword'
     result = db.session.execute(sql, {'keyword':keyword})
@@ -110,11 +109,10 @@ def delete_post(id):
     sql = 'SELECT visible FROM posts WHERE id=:id'
     result = db.session.execute(sql, {'id':id})
     ans = result.fetchone()[0]
+    sql = 'UPDATE posts SET visible=0 WHERE id=:id'
     if (ans == 0 and admin_result):
         sql = 'UPDATE posts SET visible=1 WHERE id=:id'
-    else:
-        sql = 'UPDATE posts SET visible=0 WHERE id=:id'
-    # sql = 'UPDATE posts SET visible=0 WHERE id=:id'
+        
     db.session.execute(sql, {'id':id})
     db.session.commit()
 
@@ -123,22 +121,25 @@ def delete_comment(id):
     sql = 'SELECT visible FROM comments WHERE id=:id'
     result = db.session.execute(sql, {'id':id})
     ans = result.fetchone()[0]
+    sql = 'UPDATE comments SET visible=0 WHERE id=:id'
     if (ans == 0 and admin_result):
         sql = 'UPDATE comments SET visible=1 WHERE id=:id'
-    else:
-        sql = 'UPDATE comments SET visible=0 WHERE id=:id'
-
+    
     db.session.execute(sql, {'id':id})
     db.session.commit()
 
 def ban_user(id):
     admin_result = is_admin_query()
     if admin_result:
-        sql = 'UPDATE users SET banned=1 WHERE id=:id'
+        sql = 'SELECT banned FROM users WHERE id=:id'
+        result = db.session.execute(sql, {'id':id})
+        ans = result.fetchone()[0]
+        sql = 'UPDATE users SET banned=0 WHERE id=:id'
+        if (ans == 0):
+            sql = 'UPDATE users SET banned=1 WHERE id=:id'
+            
         db.session.execute(sql, {'id':id})
         db.session.commit()
-
-
 
 def get_comments_for_post(id):
     sql = 'SELECT C.content, U.username, C.sent_at ' \
@@ -173,14 +174,12 @@ def get_comments_for_post_for_index_as_admin(id):
     return comments
 
 def get_comments_for_user(id):
-    sql = 'SELECT C.content, U.username, C.sent_at, C.post_id, C.post_id, C.visible ' \
-        'FROM posts P, comments C, users U WHERE C.visible=1 AND U.id=:id AND P.id=C.post_id AND ' \
+    sql = 'SELECT C.content, U.username, C.sent_at, C.id, C.post_id, C.visible ' \
+        'FROM posts P, comments C, users U WHERE C.visible=1 AND C.user_id=:id AND P.id=C.post_id AND ' \
         'U.id=C.user_id ORDER BY C.id'
     result = db.session.execute(sql, {'id':id})
     comments = result.fetchall()
     return comments
-
-
 
 def get_image(id):
     sql = 'SELECT data FROM images WHERE id=:id'
@@ -192,7 +191,6 @@ def get_image(id):
     filename = result.fetchone()[0]
     return (image, filename)
 
-
 def magnify_the_image(id):
     sql = 'SELECT data FROM images WHERE id=:id'
     result = db.session.execute(sql, {'id':id})
@@ -201,14 +199,12 @@ def magnify_the_image(id):
     response.headers.set('Content-Type','image/jpeg')
     return response
 
-
 def resize_image(file):
     '''
     Resizes the images. 
     '''
     basewidth = 400
     img = Image.open(file)
-    
     try:
     # Grab orientation value.
         image_exif = img._getexif()
@@ -232,7 +228,6 @@ def resize_image(file):
     img_byte_arr = img_byte_arr.getvalue()
     return img_byte_arr
 
-
 def get_images_for_posts(posts):
     images = []
     if len(posts) > 0:
@@ -240,3 +235,15 @@ def get_images_for_posts(posts):
             id = post[0]
             images.append(get_image(id))
     return images
+
+def get_images_and_comments(posts):
+    comment_count = []
+    images = []
+    comments = []
+    for post in posts:
+        id = post[0]
+        comments.append(get_comments_for_post_for_index(id))
+        comment_count.append(len(get_comments_for_post(id)))
+        images.append(get_image(id))
+
+    return comment_count, images, comments
