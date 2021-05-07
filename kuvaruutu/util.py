@@ -44,7 +44,6 @@ def send(title, content, file):
         sql = 'INSERT INTO posts (title, content, user_id, sent_at) VALUES (:title, :content, :user_id, NOW()) RETURNING id'
         result = db.session.execute(sql, {'title':title, 'content':content, 'user_id':user_id})
         message_id = result.fetchone()[0]
-        #print('saatu post id', message_id)
         db.session.commit()
 
         sql = 'INSERT INTO images (name, message_id, data) VALUES (:name, :message_id, :data)'
@@ -82,17 +81,14 @@ def admin_search(keyword):
     post_sql = 'SELECT P.id, P.title, P.content FROM posts P WHERE (content LIKE :keyword or title LIKE :keyword)'
     post_query = db.session.execute(post_sql, {'keyword':keyword})
     posts = post_query.fetchall()
-    # print('admin_search.posts', posts)
 
     comment_sql = 'SELECT C.id, C.content, C.post_id, C.user_id FROM comments C, users U WHERE U.username LIKE :keyword AND C.user_id=U.id'
     comment_query = db.session.execute(comment_sql, {'keyword':keyword})
     comments = comment_query.fetchall()
-    # print('admin_search.comments', comments)
 
     user_sql = 'SELECT U.username, U.id FROM users U WHERE U.username LIKE :keyword'
     user_query = db.session.execute(user_sql, {'keyword':keyword})
     users = user_query.fetchall()
-    # print('admin_search.users', users)
 
     return users, posts, comments
 
@@ -101,7 +97,6 @@ def admin_search_for_user(keyword):
     sql = 'SELECT id, username FROM users WHERE username LIKE :keyword'
     result = db.session.execute(sql, {'keyword':keyword})
     result = result.fetchone()
-    # print('admin yhdelle tulos:', result)
     return result
 
 def get_all_users():
@@ -115,14 +110,9 @@ def delete_post(id):
     sql = 'SELECT visible FROM posts WHERE id=:id'
     result = db.session.execute(sql, {'id':id})
     ans = result.fetchone()[0]
-    print(ans)
-    # sql = ''
-
     if (ans == 0 and admin_result):
-        print('tehtiin näkyväksi')
         sql = 'UPDATE posts SET visible=1 WHERE id=:id'
     else:
-        print('piilotettiin')
         sql = 'UPDATE posts SET visible=0 WHERE id=:id'
     # sql = 'UPDATE posts SET visible=0 WHERE id=:id'
     db.session.execute(sql, {'id':id})
@@ -133,12 +123,9 @@ def delete_comment(id):
     sql = 'SELECT visible FROM comments WHERE id=:id'
     result = db.session.execute(sql, {'id':id})
     ans = result.fetchone()[0]
-    print('comment ans', ans)
     if (ans == 0 and admin_result):
-        print('kommentti tehtiin näkyväksi')
         sql = 'UPDATE comments SET visible=1 WHERE id=:id'
     else:
-        print('kommentti piilotettiin')
         sql = 'UPDATE comments SET visible=0 WHERE id=:id'
 
     db.session.execute(sql, {'id':id})
@@ -196,7 +183,6 @@ def get_comments_for_user(id):
 
 
 def get_image(id):
-    # print('saatu id', id)
     sql = 'SELECT data FROM images WHERE id=:id'
     result = db.session.execute(sql, {'id':id})
     data = result.fetchone()[0]
@@ -213,7 +199,6 @@ def magnify_the_image(id):
     data = result.fetchone()[0]
     response = make_response(bytes(data))
     response.headers.set('Content-Type','image/jpeg')
-    # print('response', response)
     return response
 
 
@@ -249,7 +234,6 @@ def resize_image(file):
 
 
 def get_images_for_posts(posts):
-    # print('saatu posts', posts)
     images = []
     if len(posts) > 0:
         for post in posts:
