@@ -15,8 +15,10 @@ def login(username,password):
             session['user_id'] = user[1]
             session['admin'] = is_admin()
             return True, 'none'
-        else:
+        elif user[3] == 1:
             return False, 'banned'
+        else:
+            return False, 'none'
 
 def logout():
     del session['user_id']
